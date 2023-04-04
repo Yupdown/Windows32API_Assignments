@@ -75,7 +75,7 @@ RECT rects[] =
     SCREEN_WIDTH * 2 / 3, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT
 };
 
-COLORREF colors[] =
+COLORREF solid_brushes[] =
 {
     0x00808080, 0x008080FF, 0x0080FF80, 0x0080FFFF,
     0x00FF8080, 0x00FF80FF, 0x00FFFF80, 0x00FFFFFF
@@ -99,8 +99,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         hDC = BeginPaint(hWnd, &ps);
         for (int i = 0; i < 6; ++i)
         {
-            SetBkColor(hDC, colors[uid(dre)]);
-            SetTextColor(hDC, colors[uid(dre)]);
+            SetBkColor(hDC, solid_brushes[uid(dre)]);
+            SetTextColor(hDC, solid_brushes[uid(dre)]);
             DrawText(hDC, str_buffer, lstrlen(str_buffer), &rects[i], DT_WORDBREAK | DT_CENTER);
         }
         EndPaint(hWnd, &ps);

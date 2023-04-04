@@ -65,7 +65,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassExW(&wcex);
 }
 
-COLORREF colors[] =
+COLORREF solid_brushes[] =
 {
     0x00808080, 0x008080FF, 0x0080FF80, 0x0080FFFF,
     0x00FF8080, 0x00FF80FF, 0x00FFFF80, 0x00FFFFFF

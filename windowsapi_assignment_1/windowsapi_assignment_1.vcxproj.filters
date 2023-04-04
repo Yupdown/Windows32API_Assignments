@@ -36,7 +36,7 @@
     <ClCompile Include="main_2-7.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="base.cpp">
+    <ClCompile Include="main_2-10.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main_2-6.cpp">
@@ -46,6 +46,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main_2-8.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main_2-9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
