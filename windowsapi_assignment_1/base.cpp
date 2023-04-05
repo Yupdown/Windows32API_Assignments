@@ -4,6 +4,8 @@
 WCHAR szTitle[] = L"Windows32 API Example";
 WCHAR szWindowClass[] = L"Windows32 API Class";
 
+RECT screen_rect;
+
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
@@ -46,15 +48,39 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
     return (int)message.wParam;
 }
 
+void PaintScreen(HDC hDC)
+{
+
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    HDC hDC;
+    HDC hDC, mem_hDC;
+    HBITMAP mem_bit, old_bit;
     PAINTSTRUCT ps;
 
     switch (message)
     {
+    case WM_SIZE:
+        GetClientRect(hWnd, &screen_rect);
+        InvalidateRect(hWnd, NULL, false);
+        break;
+
     case WM_PAINT:
         hDC = BeginPaint(hWnd, &ps);
+        mem_hDC = CreateCompatibleDC(hDC);
+
+        mem_bit = CreateCompatibleBitmap(hDC, screen_rect.right, screen_rect.bottom);
+        old_bit = (HBITMAP)SelectObject(mem_hDC, mem_bit);
+
+        PatBlt(mem_hDC, 0, 0, screen_rect.right, screen_rect.bottom, WHITENESS);
+        PaintScreen(mem_hDC);
+        BitBlt(hDC, 0, 0, screen_rect.right, screen_rect.bottom, mem_hDC, 0, 0, SRCCOPY);
+
+        SelectObject(mem_hDC, old_bit);
+        DeleteObject(mem_bit);
+
+        DeleteDC(mem_hDC);
         EndPaint(hWnd, &ps);
         break;
 

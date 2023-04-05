@@ -71,11 +71,13 @@ public:
     int x, y;
     int shape;
     int color;
+    int scale;
 
     Player()
     {
         shape = 1;
-        color = 2;
+        color = 3;
+        scale = CELL_SIZE - 4;
     }
 
     bool Move(int dx, int dy)
@@ -95,7 +97,7 @@ class TileChangeColor : public Tile
 public:
     TileChangeColor()
     {
-        color = uid(dre) % 6 + 3;
+        color = uid(dre) % 6 + 4;
     }
 
     void OnPlayer(Player& target) override
@@ -119,6 +121,21 @@ public:
     }
 };
 
+class TileChangeScale : public Tile
+{
+public:
+    TileChangeScale()
+    {
+        color = 2;
+    }
+
+    void OnPlayer(Player& target) override
+    {
+        int value = uid(dre) % (CELL_SIZE - 5) + 6;
+        target.scale = value;
+    }
+};
+
 class TileWall : public Tile
 {
 public:
@@ -130,7 +147,7 @@ public:
 
     void OnPlayer(Player& target) override
     {
-
+        
     }
 };
 
@@ -168,6 +185,7 @@ HBRUSH brushes[] =
 {
     CreateSolidBrush(0x00000000),
     CreateSolidBrush(0x00808080),
+    CreateSolidBrush(0x00C0C0C0),
     CreateSolidBrush(0x00FFFFFF),
     CreateSolidBrush(0x00FF0000),
     CreateSolidBrush(0x00FFFF00),
@@ -182,6 +200,8 @@ int turn = 0;
 
 void Initialize()
 {
+    players[0] = Player();
+    players[1] = Player();
     players[0].x = 0;
     players[0].y = 0;
     players[1].x = SIZEOF_BOARD - 1;
@@ -193,6 +213,8 @@ void Initialize()
         tiles[uid(dre) % SIZEOF_BOARD][uid(dre) % SIZEOF_BOARD] = new TileChangeColor();
     for (int i = 0; i < 10; ++i)
         tiles[uid(dre) % SIZEOF_BOARD][uid(dre) % SIZEOF_BOARD] = new TileChangeShape();
+    for (int i = 0; i < 10; ++i)
+        tiles[uid(dre) % SIZEOF_BOARD][uid(dre) % SIZEOF_BOARD] = new TileChangeScale();
 }
 
 void RequestMovePlayer(int index, int dx, int dy)
@@ -220,7 +242,7 @@ void Draw(HDC hDC)
     {
         for (int j = 0; j < SIZEOF_BOARD; ++j)
         {
-            HBRUSH old_brush = (HBRUSH)SelectObject(hDC, brushes[tiles[i][j] != nullptr ? tiles[i][j]->color : 2]);
+            HBRUSH old_brush = (HBRUSH)SelectObject(hDC, brushes[tiles[i][j] != nullptr ? tiles[i][j]->color : 3]);
             Rectangle(hDC, j * CELL_SIZE, i * CELL_SIZE, (j + 1) * CELL_SIZE, (i + 1) * CELL_SIZE);
             SelectObject(hDC, old_brush);
         }
@@ -231,7 +253,14 @@ void Draw(HDC hDC)
         Player player = players[i];
 
         HBRUSH old_brush = (HBRUSH)SelectObject(hDC, brushes[player.color]);
-        shapes[player.shape](hDC, player.x * CELL_SIZE + 2, player.y * CELL_SIZE + 2, (player.x + 1) * CELL_SIZE - 2, (player.y + 1) * CELL_SIZE - 2);
+        int offset = (CELL_SIZE - player.scale) / 2;
+        shapes[player.shape](
+            hDC,
+            player.x * CELL_SIZE + offset,
+            player.y * CELL_SIZE + offset,
+            (player.x + 1) * CELL_SIZE - offset,
+            (player.y + 1) * CELL_SIZE - offset
+            );
         SelectObject(hDC, old_brush);
     }
 
@@ -273,6 +302,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             RequestMovePlayer(0, 1, 0);
             break;
         case 'R':
+            for (int i = 0; i < SIZEOF_BOARD; ++i)
+            {
+                for (int j = 0; j < SIZEOF_BOARD; ++j)
+                {
+                    if (tiles[i][j] != nullptr)
+                    {
+                        delete tiles[i][j];
+                        tiles[i][j] = nullptr;
+                    }
+                }
+            }
+            Initialize();
             break;
         case 'Q':
             PostQuitMessage(0);

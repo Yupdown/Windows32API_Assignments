@@ -75,6 +75,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             length = 0;
             input_string[0] = 0;
             break;
+
         case VK_BACK:
             if (length > 0)
                 input_string[--length] = 0;
