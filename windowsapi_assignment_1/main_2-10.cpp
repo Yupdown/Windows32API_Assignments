@@ -236,14 +236,18 @@ void RequestMovePlayer(int index, int dx, int dy)
     turn = (turn + 1) % 2;
 }
 
-void Draw(HDC hDC)
+void Draw(HDC hDC, unsigned int time)
 {
     for (int i = 0; i < SIZEOF_BOARD; ++i)
     {
         for (int j = 0; j < SIZEOF_BOARD; ++j)
         {
+            double t = 0.1 * ((int)time - i - j);
+            if (t < 0.0)
+                continue;
+            int delta = t < 3.14 ? (sin(t) - 1.0 + (t / 3.14)) * 100 : 0;
             HBRUSH old_brush = (HBRUSH)SelectObject(hDC, brushes[tiles[i][j] != nullptr ? tiles[i][j]->color : 3]);
-            Rectangle(hDC, j * CELL_SIZE, i * CELL_SIZE, (j + 1) * CELL_SIZE, (i + 1) * CELL_SIZE);
+            Rectangle(hDC, j * CELL_SIZE, i * CELL_SIZE - delta, (j + 1) * CELL_SIZE, (i + 1) * CELL_SIZE - delta);
             SelectObject(hDC, old_brush);
         }
     }
@@ -273,12 +277,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     HDC hDC, mem_hDC;
     HBITMAP mem_bit, old_bit;
     static RECT screen_rect;
+    static unsigned int t = 0;
 
     switch (message)
     {
     case WM_CREATE:
         dre.seed(time(NULL));
         Initialize();
+        SetTimer(hWnd, 1, 10, NULL);
         break;
 
     case WM_SIZE:
@@ -313,6 +319,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     }
                 }
             }
+            t = 0;
             Initialize();
             break;
         case 'Q':
@@ -334,6 +341,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         InvalidateRect(hWnd, NULL, false);
         break;
 
+    case WM_TIMER:
+        t += 1U;
+        InvalidateRect(hWnd, NULL, false);
+        break;
+
     case WM_PAINT:
         hDC = BeginPaint(hWnd, &ps);
         mem_hDC = CreateCompatibleDC(hDC);
@@ -342,7 +354,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         old_bit = (HBITMAP)SelectObject(mem_hDC, mem_bit);
 
         PatBlt(mem_hDC, 0, 0, screen_rect.right, screen_rect.bottom, WHITENESS);
-        Draw(mem_hDC);
+        Draw(mem_hDC, t);
         BitBlt(hDC, 0, 0, screen_rect.right, screen_rect.bottom, mem_hDC, 0, 0, SRCCOPY);
 
         SelectObject(mem_hDC, old_bit);
