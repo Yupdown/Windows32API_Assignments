@@ -4,6 +4,13 @@
 
 #include "winapiutil.h"
 
+struct Brick
+{
+    RECT rect;
+    HBRUSH color_fill;
+    int break_time;
+};
+
 WCHAR szTitle[] = L"Windows32 API Example";
 WCHAR szWindowClass[] = L"Windows32 API Class";
 
@@ -32,7 +39,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
     HWND hWnd = CreateWindow(
         szWindowClass, szTitle,
         WS_OVERLAPPEDWINDOW,
-        0, 0, 640, 480,
+        0, 0, 640 + 16, 480 + 39,
         nullptr,
         nullptr,
         hInstance,
@@ -53,21 +60,72 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 }
 
 RECT rect_board = { 0, 0, 640, 480 };
-RECT bricks[3][10];
+Brick bricks[3][10];
+
 POINT ball_position = { 320, 400 };
-POINT ball_velocity = { -5, -5 };
+int ball_velocity_magnitude;
+POINT ball_velocity_direction;
 int ball_radius = 10;
+
+RECT bar_rect;
+bool mouse_down;
+bool ball_state;
+bool update_enabled;
+LONG current_time;
+TCHAR text_count[128];
+
+void UpdateBarRect(LONG position_x)
+{
+    bar_rect = { position_x - 60, rect_board.bottom - 60, position_x + 60, rect_board.bottom - 40 };
+}
+
+void Initialize()
+{
+    for (int i = 0; i < 3; ++i)
+    {
+        for (int j = 0; j < 10; ++j)
+        {
+            bricks[i][j].break_time = -1;
+            bricks[i][j].color_fill = CreateSolidBrush(0x00ABCDEF * (i * 10 + j) / 30);
+            bricks[i][j].rect = {};
+        }
+    }
+    ball_velocity_magnitude = 5;
+    ball_velocity_direction = { 1, -1 };
+    UpdateBarRect((rect_board.left + rect_board.right) / 2);
+    ball_state = false;
+    update_enabled = true;
+}
+
+inline RECT CircleRect(const POINT& position, int radius)
+{
+    return RECT{ position.x - radius, position.y - radius, position.x + radius, position.y + radius };
+}
 
 void PaintScreen(HDC hDC)
 {
     Rectangle(hDC, rect_board.left, rect_board.top, rect_board.right, rect_board.bottom);
+    Rectangle(hDC, bar_rect.left, bar_rect.top, bar_rect.right, bar_rect.bottom);
     for (int i = 0; i < 3; ++i)
     {
         for (int j = 0; j < 10; ++j)
-            Rectangle(hDC, bricks[i][j].left, bricks[i][j].top, bricks[i][j].right, bricks[i][j].bottom);
+        {
+            bool broken = bricks[i][j].break_time >= 0;
+            if (broken && current_time - bricks[i][j].break_time > 1000)
+                continue;
+            int offset = broken ? 15 * (current_time - bricks[i][j].break_time) / 1000 : 0;
+            DrawPolygon(Rectangle, hDC,
+                bricks[i][j].rect.left + offset,
+                bricks[i][j].rect.top + offset,
+                bricks[i][j].rect.right - offset,
+                bricks[i][j].rect.bottom - offset,
+                NULL, broken ? bricks[i][j].color_fill : NULL);
+        }
     }
-
     Ellipse(hDC, ball_position.x - ball_radius, ball_position.y - ball_radius, ball_position.x + ball_radius, ball_position.y + ball_radius);
+
+    if (!update_enabled)
+        TextOut(hDC, 1, 1, text_count, lstrlen(text_count));
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -79,6 +137,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_CREATE:
+        Initialize();
         SetTimer(hWnd, 1, 1000 / 72, TimerProc);
         break;
 
@@ -87,6 +146,61 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         InvalidateRect(hWnd, NULL, false);
         break;
 
+    case WM_CHAR:
+        switch (towupper(wParam))
+        {
+        case 'S':
+            ball_state = true;
+            break;
+        case 'P':
+            update_enabled = !update_enabled;
+            if (!update_enabled)
+            {
+                int c1 = 0;
+                int c2 = 0;
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 10; ++j)
+                    {
+                        if (bricks[i][j].break_time >= 0)
+                            (current_time - bricks[i][j].break_time > 1000 ? c2 : c1) += 1;
+                    }
+                }
+                wsprintf(text_count, L"Breaking bricks : %d, Broken bricks : %d", c1, c2);
+            }
+            break;
+        case 'N':
+            Initialize();
+            break;
+        case 'Q':
+            PostQuitMessage(0);
+            break;
+        case '+':
+            if (ball_velocity_magnitude < 10)
+                ball_velocity_magnitude += 1;
+            break;
+        case '-':
+            if (ball_velocity_magnitude > 1)
+                ball_velocity_magnitude -= 1;
+            break;
+        }
+        break;
+
+    case WM_LBUTTONDOWN:
+        mouse_down = true;
+        UpdateBarRect(LOWORD(lParam));
+        break;
+
+    case WM_MOUSEMOVE:
+        if (mouse_down)
+            UpdateBarRect(LOWORD(lParam));
+        break;
+
+    case WM_LBUTTONUP:
+        mouse_down = false;
+        UpdateBarRect((rect_board.left +rect_board.right) / 2);
+        break;
+        
     case WM_PAINT:
         hDC = BeginPaint(hWnd, &ps);
         mem_hDC = CreateCompatibleDC(hDC);
@@ -115,41 +229,60 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void CALLBACK TimerProc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 {  
-    ball_position.x += ball_velocity.x;
-    ball_position.y += ball_velocity.y;
+    current_time = dwTime;
 
-    if (ball_position.x - ball_radius < rect_board.left)
+    if (ball_state)
     {
-        ball_position.x = rect_board.left * 2 + ball_radius - ball_position.x;
-        ball_velocity.x = -ball_velocity.x;
+        if (update_enabled)
+        {
+            ball_position.x += ball_velocity_direction.x * ball_velocity_magnitude;
+            ball_position.y += ball_velocity_direction.y * ball_velocity_magnitude;
+        }
+        if (ball_position.x - ball_radius < rect_board.left)
+        {
+            ball_position.x = (rect_board.left + ball_radius) * 2 - ball_position.x;
+            ball_velocity_direction.x = -ball_velocity_direction.x;
+        }
+        if (ball_position.y - ball_radius < rect_board.top)
+        {
+            ball_position.y = (rect_board.top + ball_radius) * 2 - ball_position.y;
+            ball_velocity_direction.y = -ball_velocity_direction.y;
+        }
+        if (ball_position.x + ball_radius > rect_board.right)
+        {
+            ball_position.x = (rect_board.right - ball_radius) * 2 - ball_position.x;
+            ball_velocity_direction.x = -ball_velocity_direction.x;
+        }
+        if (ball_position.y + ball_radius > rect_board.bottom)
+            ball_state = false;
     }
-    if (ball_position.y - ball_radius < rect_board.top)
+    else if (update_enabled)
     {
-        ball_position.y = rect_board.top * 2 + ball_radius - ball_position.y;
-        ball_velocity.y = -ball_velocity.y;
-    }
-    if (ball_position.x + ball_radius > rect_board.right)
-    {
-        ball_position.x = rect_board.right * 2 - ball_radius - ball_position.x;
-        ball_velocity.x = -ball_velocity.x;
-    }
-    if (ball_position.y + ball_radius > rect_board.bottom)
-    {
-        ball_position.y = rect_board.bottom * 2 - ball_radius - ball_position.y;
-        ball_velocity.y = -ball_velocity.y;
+        ball_position.x = (bar_rect.left + bar_rect.right) / 2;
+        ball_position.y = bar_rect.top - ball_radius;
     }
 
+    bool flag = false;
     for (int i = 0; i < 3; ++i)
     {
         for (int j = 0; j < 10; ++j)
         {
+            if (bricks[i][j].break_time >= 0)
+                continue;
+
             int offset_x = (sin(0.005 * dwTime + i) + 1.0) * 20.0;
-            bricks[i][j].left = j * 60 + offset_x;
-            bricks[i][j].top = i * 30 + 30;
-            bricks[i][j].right = (j + 1) * 60 + offset_x;
-            bricks[i][j].bottom = (i + 1) * 30 + 30;
+            bricks[i][j].rect.left = j * 60 + offset_x;
+            bricks[i][j].rect.top = i * 30 + 30;
+            bricks[i][j].rect.right = (j + 1) * 60 + offset_x;
+            bricks[i][j].rect.bottom = (i + 1) * 30 + 30;
+
+            if (!flag)
+            {
+                if (flag = ProcessAABBCollision(CircleRect(ball_position, ball_radius), bricks[i][j].rect, ball_position, ball_velocity_direction))
+                    bricks[i][j].break_time = dwTime;
+            }
         }
     }
-
+    ProcessAABBCollision(CircleRect(ball_position, ball_radius), bar_rect, ball_position, ball_velocity_direction);
     InvalidateRect(hWnd, NULL, false);
 }

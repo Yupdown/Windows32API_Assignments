@@ -69,9 +69,27 @@
     <ClCompile Include="main_3-2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main_3-3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3-1_board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3-1_knob.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="winapiutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vector2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3-1_knob.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3-1_board.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
