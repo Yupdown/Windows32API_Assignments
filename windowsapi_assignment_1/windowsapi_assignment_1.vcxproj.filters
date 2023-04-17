@@ -81,6 +81,12 @@
     <ClCompile Include="main_3-4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="3-4_board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3-4_rectris.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="winapiutil.h">
@@ -93,6 +99,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="3-1_board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3-4_board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3-4_rectris.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3-4_tile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

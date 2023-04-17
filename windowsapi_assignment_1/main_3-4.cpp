@@ -2,60 +2,14 @@
 #include <tchar.h>
 #include <concepts>
 #include <type_traits>
+
+#include "3-4_board.h"
 #include "winapiutil.h"
 
 WCHAR szTitle[] = L"Windows32 API Example";
 WCHAR szWindowClass[] = L"Windows32 API Class";
 
 RECT screen_rect;
-
-HBRUSH color_brushes[] =
-{
-    CreateSolidBrush(0x00B92D2D),
-    CreateSolidBrush(0x0042B925),
-    CreateSolidBrush(0x002380B9)
-};
-
-struct Tile
-{
-    int color_index;
-};
-
-class Board
-{
-public:
-    static constexpr int BOARD_COLUMNS = 6;
-    static constexpr int BOARD_ROWS = 12;
-    static constexpr int CELL_SIZE = 40;
-
-private:
-    Tile tile_map[BOARD_COLUMNS][BOARD_ROWS];
-
-public:
-    void Draw(HDC hDC)
-    {
-        for (int i = 0; i < BOARD_COLUMNS; ++i)
-        {
-            for (int j = 0; j < BOARD_ROWS; ++j)
-            {
-                RECT r = GetCellRect(POINT{ i, j });
-                Rectangle(hDC, r.left, r.top, r.right, r.bottom);
-            }
-        }
-    }
-    
-    RECT GetCellRect(const POINT& position) const
-    {
-        return RECT{ position.x * CELL_SIZE, position.y * CELL_SIZE, (position.x + 1) * CELL_SIZE, (position.y + 1) * CELL_SIZE };
-    }
-
-
-
-    void ApplyTileMap()
-    {
-
-    }
-};
 
 Board game_board;
 
@@ -116,6 +70,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_CREATE:
+        game_board.Initialize();
         SetTimer(hWnd, 1, 500, TimerProc);
         break;
 
@@ -127,17 +82,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_KEYDOWN:
         switch (wParam)
         {
-        case L'\n':
-            break;
         case VK_UP:
+            game_board.RotateRectris();
             break;
         case VK_LEFT:
+            game_board.MoveRectris(POINT{ -1, 0 });
             break;
         case VK_DOWN:
+            game_board.MoveRectris(POINT{ 0, -1 });
             break;
         case VK_RIGHT:
+            game_board.MoveRectris(POINT{ 1, 0 });
             break;
         }
+        InvalidateRect(hWnd, NULL, false);
         break;
 
     case WM_PAINT:
@@ -168,5 +126,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void CALLBACK TimerProc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 {
-
+    game_board.MoveRectris(POINT{ 0, -1 });
+    InvalidateRect(hWnd, NULL, false);
 }

@@ -134,6 +134,8 @@
     <ClCompile Include="3-1_knob.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="3-4_board.cpp" />
+    <ClCompile Include="3-4_rectris.cpp" />
     <ClCompile Include="main_2-10.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -196,6 +198,9 @@
   <ItemGroup>
     <ClInclude Include="3-1_board.h" />
     <ClInclude Include="3-1_knob.h" />
+    <ClInclude Include="3-4_board.h" />
+    <ClInclude Include="3-4_rectris.h" />
+    <ClInclude Include="3-4_tile.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="winapiutil.h" />
   </ItemGroup>
