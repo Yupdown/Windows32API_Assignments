@@ -1,28 +1,17 @@
 #include "3-1_knob.h"
 #include "winapiutil.h"
 
-MoveBehaviourFollow::MoveBehaviourFollow(Knob* _target)
-{
-    target = _target;
-    target_lastposition = target->GetPosition();
-}
-
-void MoveBehaviourFollow::Move(POINT& position, const Board& board)
-{
-    target_lastposition = target->GetPosition();
-    position = target_lastposition;
-}
-
 Knob::Knob(POINT _pos, COLORREF _col, bool _player)
 {
     position.x = _pos.x;
     position.y = _pos.y;
     fill_color = CreateSolidBrush(_col);
 
-    move_behaviour = new MoveBehaviourT1(false, false);
+    move_behaviour = nullptr;
     front_knob = nullptr;
     back_knob = nullptr;
     player = _player;
+    effect_timer = 0;
 }
 
 Knob::~Knob()
@@ -33,6 +22,8 @@ Knob::~Knob()
 
 void Knob::Update(const Board& board)
 {
+    effect_timer -= 1;
+
     if (back_knob != nullptr)
     {
         back_knob->Update(board);
@@ -45,8 +36,9 @@ void Knob::Update(const Board& board)
 
 void Knob::Draw(HDC hDC, const Board& board) const
 {
+    int offset = (effect_timer > 0 ? 10 : 0);
     RECT r = board.GetCellRect(position);
-    DrawPolygon(Ellipse, hDC, r.left, r.top, r.right, r.bottom, NULL, fill_color);
+    DrawPolygon(Ellipse, hDC, r.left - offset, r.top - offset, r.right + offset, r.bottom + offset, NULL, fill_color);
 }
 
 bool Knob::IsHead() const
@@ -59,6 +51,11 @@ Knob* Knob::Head()
     return (front_knob != nullptr ? front_knob->Head() : this);
 }
 
+Knob* Knob::Tail()
+{
+    return (back_knob != nullptr ? back_knob->Tail() : this);
+}
+
 POINT Knob::GetPosition() const
 {
     return position;
@@ -66,8 +63,8 @@ POINT Knob::GetPosition() const
 
 void Knob::ChangeMoveBehaviour(MoveBehaviour* new_behaviour)
 {
-    if (move_behaviour != nullptr)
-        delete move_behaviour;
+    /*if (move_behaviour != nullptr)
+        delete move_behaviour;*/
     move_behaviour = new_behaviour;
 }
 
@@ -78,6 +75,8 @@ void Knob::OnCollisionKnob(Knob& other, Board& board)
 
     if (!other.Head()->player)
         ConnectKnob(other);
+    else
+        other.ConnectKnob(*this);
 }
 
 void Knob::OnCollisionDrop(Drop& other, Board& board)
@@ -111,16 +110,86 @@ bool Knob::ConnectKnob(Knob& other)
     Knob* head = other.Head();
     if (Head() == head)
         return false;
-
-    Knob* tail = this;
-    while (tail->back_knob != nullptr)
-        tail = tail->back_knob;
+    Knob* tail = Tail();
 
     tail->back_knob = head;
     head->front_knob = tail;
-    head->ChangeMoveBehaviour(new MoveBehaviourFollow(tail));
 
     return true;
+}
+
+void Knob::Detach()
+{
+    if (front_knob != nullptr)
+        front_knob->back_knob = nullptr;
+    front_knob = nullptr;
+}
+
+void Knob::OnMouse(int state)
+{
+    switch (state)
+    {
+    case 1:
+        if (player)
+            effect_timer = 5;
+        else
+            Detach();
+        break;
+    case 2:
+        break;
+    }
+}
+
+void Knob::Jump()
+{
+    Knob* knob = Head();
+    while (knob != nullptr)
+    {
+        std::swap(knob->position.x, knob->position.y);
+        knob = knob->back_knob;
+    }
+}
+
+void Knob::SwapHeadTail()
+{
+    Knob* head = Head();
+    Knob* tail = Tail();
+
+    while (head != tail)
+    {
+        std::swap(head->position, tail->position);
+        if (head->back_knob == tail)
+            break;
+        head = head->back_knob;
+        tail = tail->front_knob;
+    }
+}
+
+MoveBehaviourTarget::MoveBehaviourTarget(POINT pos, Knob* p, MoveBehaviour* behaviour)
+{
+    target = pos;
+    player = p;
+    last_behaviour = behaviour;
+}
+
+void MoveBehaviourTarget::Move(POINT& position, const Board& board)
+{
+    LONG dx = target.x - position.x;
+    LONG dy = target.y - position.y;
+
+    if (dx != 0)
+        position.x += dx / abs(dx);
+    if (dy != 0)
+        position.y += dy / abs(dy);
+
+    if (position.x == target.x && position.y == target.y)
+        player->ChangeMoveBehaviour(last_behaviour);
+}
+
+void Knob::MoveToTarget(POINT target)
+{
+    MoveBehaviour* new_behaviour = new MoveBehaviourTarget(target, this, move_behaviour);
+    ChangeMoveBehaviour(new_behaviour);
 }
 
 Drop::Drop(POINT pos, COLORREF col)
@@ -133,7 +202,7 @@ Drop::Drop(POINT pos, COLORREF col)
 void Drop::Draw(HDC hDC, const Board& board) const
 {
     RECT r = board.GetCellRect(position);
-    DrawPolygon(Rectangle, hDC, r.left + 10, r.top + 10, r.right - 10, r.bottom - 10, NULL, fill_color);
+    DrawPolygon(Rectangle, hDC, r.left + 4, r.top + 4, r.right - 4, r.bottom - 4, NULL, fill_color);
 }
 
 POINT Drop::GetPosition() const

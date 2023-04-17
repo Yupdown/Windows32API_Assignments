@@ -1,26 +1,66 @@
 #include <Windows.h>
 #include <tchar.h>
-
-#include <vector>
-#include <random>
-
-#include "3-1_knob.h"
-#include "3-1_board.h"
-
-std::default_random_engine dre;
-std::uniform_int_distribution<int> uid;
+#include <concepts>
+#include <type_traits>
+#include "winapiutil.h"
 
 WCHAR szTitle[] = L"Windows32 API Example";
 WCHAR szWindowClass[] = L"Windows32 API Class";
 
 RECT screen_rect;
 
+HBRUSH color_brushes[] =
+{
+    CreateSolidBrush(0x00B92D2D),
+    CreateSolidBrush(0x0042B925),
+    CreateSolidBrush(0x002380B9)
+};
+
+struct Tile
+{
+    int color_index;
+};
+
+class Board
+{
+public:
+    static constexpr int BOARD_COLUMNS = 6;
+    static constexpr int BOARD_ROWS = 12;
+    static constexpr int CELL_SIZE = 40;
+
+private:
+    Tile tile_map[BOARD_COLUMNS][BOARD_ROWS];
+
+public:
+    void Draw(HDC hDC)
+    {
+        for (int i = 0; i < BOARD_COLUMNS; ++i)
+        {
+            for (int j = 0; j < BOARD_ROWS; ++j)
+            {
+                RECT r = GetCellRect(POINT{ i, j });
+                Rectangle(hDC, r.left, r.top, r.right, r.bottom);
+            }
+        }
+    }
+    
+    RECT GetCellRect(const POINT& position) const
+    {
+        return RECT{ position.x * CELL_SIZE, position.y * CELL_SIZE, (position.x + 1) * CELL_SIZE, (position.y + 1) * CELL_SIZE };
+    }
+
+
+
+    void ApplyTileMap()
+    {
+
+    }
+};
+
+Board game_board;
+
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 void    CALLBACK    TimerProc(HWND, UINT, UINT_PTR, DWORD);
-
-Knob* player_knob;
-Board board;
-int elapse_interval = 50;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
@@ -42,7 +82,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
     HWND hWnd = CreateWindow(
         szWindowClass, szTitle,
         WS_OVERLAPPEDWINDOW,
-        0, 0, BOARD_SIZE + 16, BOARD_SIZE + 39,
+        0, 0, Board::BOARD_COLUMNS * Board::CELL_SIZE + 16, Board::BOARD_ROWS * Board::CELL_SIZE + 39,
         nullptr,
         nullptr,
         hInstance,
@@ -62,22 +102,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
     return (int)message.wParam;
 }
 
-void Initialize()
-{
-    player_knob = new Knob(POINT{ 0, 0 }, 0x00FFFFFF, true);
-    board.SetPlayer(player_knob);
-    board.AddKnob(player_knob);
-
-    for (int i = 0; i < 20; ++i)
-    {
-        Drop* drop = new Drop(POINT{uid(dre) % Board::BOARD_LENGTH, uid(dre) % Board::BOARD_LENGTH }, uid(dre) % 0x01000000);
-        board.AddDrop(drop);
-    }
-}
-
 void PaintScreen(HDC hDC)
 {
-    board.Draw(hDC);
+    game_board.Draw(hDC);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -89,71 +116,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_CREATE:
-        Initialize();
-        SetTimer(hWnd, 1, elapse_interval, TimerProc);
-        break;
-
-    case WM_CHAR:
-        switch (towupper(wParam))
-        {
-        case L'S':
-            player_knob->ChangeMoveBehaviour(new MoveBehaviourT1(false, false));
-            break;
-        case L'+':
-            elapse_interval = max(elapse_interval - 10, 10);
-            KillTimer(hWnd, 1);
-            SetTimer(hWnd, 1, elapse_interval, TimerProc);
-            break;
-        case L'-':
-            elapse_interval = min(elapse_interval + 10, 100);
-            KillTimer(hWnd, 1);
-            SetTimer(hWnd, 1, elapse_interval, TimerProc);
-            break;
-        case L'J':
-            player_knob->Jump();
-            break;
-        case L'T':
-            player_knob->SwapHeadTail();
-            break;
-        case L'Q':
-            PostQuitMessage(0);
-            break;
-        }
-        break;
-
-    case WM_KEYDOWN:
-        switch (wParam)
-        {
-        case VK_UP:
-            player_knob->ChangeMoveBehaviour(new MoveBehaviourT2(true, false));
-            break;
-        case VK_LEFT:
-            player_knob->ChangeMoveBehaviour(new MoveBehaviourT1(true, false));
-            break;
-        case VK_DOWN:
-            player_knob->ChangeMoveBehaviour(new MoveBehaviourT2(false, false));
-            break;
-        case VK_RIGHT:
-            player_knob->ChangeMoveBehaviour(new MoveBehaviourT1(false, false));
-            break;
-        }
-        break;
-
-    case WM_MOUSEMOVE:
-        board.HandleMouse(LOWORD(lParam), HIWORD(lParam), 0);
-        break;
-
-    case WM_LBUTTONDOWN:
-        board.HandleMouse(LOWORD(lParam), HIWORD(lParam), 1);
-        break;
-
-    case WM_RBUTTONDOWN:
-        board.HandleMouse(LOWORD(lParam), HIWORD(lParam), 2);
+        SetTimer(hWnd, 1, 500, TimerProc);
         break;
 
     case WM_SIZE:
         GetClientRect(hWnd, &screen_rect);
         InvalidateRect(hWnd, NULL, false);
+        break;
+
+    case WM_KEYDOWN:
+        switch (wParam)
+        {
+        case L'\n':
+            break;
+        case VK_UP:
+            break;
+        case VK_LEFT:
+            break;
+        case VK_DOWN:
+            break;
+        case VK_RIGHT:
+            break;
+        }
         break;
 
     case WM_PAINT:
@@ -184,6 +168,5 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void CALLBACK TimerProc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 {
-    board.Update();
-    InvalidateRect(hWnd, NULL, false);
+
 }

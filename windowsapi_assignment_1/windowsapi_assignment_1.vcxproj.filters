@@ -78,6 +78,9 @@
     <ClCompile Include="3-1_knob.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main_3-4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="winapiutil.h">
