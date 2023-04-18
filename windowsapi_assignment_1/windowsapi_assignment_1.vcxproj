@@ -136,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="3-4_board.cpp" />
     <ClCompile Include="3-4_rectris.cpp" />
+    <ClCompile Include="main_4-1.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="main_2-10.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -193,7 +196,10 @@
     <ClCompile Include="main_3-3.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="main_3-4.cpp" />
+    <ClCompile Include="main_3-4.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="main_4-2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3-1_board.h" />
@@ -201,8 +207,12 @@
     <ClInclude Include="3-4_board.h" />
     <ClInclude Include="3-4_rectris.h" />
     <ClInclude Include="3-4_tile.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="winapiutil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -87,6 +87,12 @@
     <ClCompile Include="3-4_rectris.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main_4-2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main_4-1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="winapiutil.h">
@@ -110,5 +116,13 @@
     <ClInclude Include="3-4_tile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
