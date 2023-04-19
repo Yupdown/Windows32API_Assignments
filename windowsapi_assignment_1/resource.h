@@ -4,6 +4,7 @@
 //
 #define IDR_MENU1                       101
 #define IDR_MENU2                       102
+#define IDR_MENU3                       103
 #define ID_BORDER_ON                    40001
 #define ID_BORDER_OFF                   40002
 #define ID_COLOR_COLOR1                 40003
@@ -30,13 +31,24 @@
 #define ID_BRICKS_4                     40024
 #define ID_BRICKS_5                     40025
 #define ID_GAME_START                   40026
+#define ID_MOVE_1                       40027
+#define ID_MOVE_2                       40028
+#define ID_MOVE_3                       40029
+#define ID_CHANGE_INVERT                40030
+#define ID_CHANGE_COLOR                 40031
+#define ID_COLOR_RED                    40032
+#define ID_COLOR_GREEN                  40033
+#define ID_COLOR_BLUE                   40034
+#define ID_COLOR_RANDOM                 40035
+#define ID_GAME_RESET40036              40036
+#define ID_GAME_QUIT                    40037
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        103
-#define _APS_NEXT_COMMAND_VALUE         40027
+#define _APS_NEXT_RESOURCE_VALUE        104
+#define _APS_NEXT_COMMAND_VALUE         40038
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

@@ -116,6 +116,32 @@ BEGIN
     END
 END
 
+IDR_MENU3 MENU
+BEGIN
+    POPUP "Move"
+    BEGIN
+        MENUITEM "1",                           ID_MOVE_1
+        MENUITEM "2",                           ID_MOVE_2
+        MENUITEM "3",                           ID_MOVE_3
+    END
+    POPUP "Change"
+    BEGIN
+        MENUITEM "Invert",                      ID_CHANGE_INVERT
+        POPUP "Color"
+        BEGIN
+            MENUITEM "Red",                         ID_COLOR_RED
+            MENUITEM "Green",                       ID_COLOR_GREEN
+            MENUITEM "Blue",                        ID_COLOR_BLUE
+            MENUITEM "Random",                      ID_COLOR_RANDOM
+        END
+    END
+    POPUP "Game"
+    BEGIN
+        MENUITEM "Reset",                       ID_GAME_RESET40036
+        MENUITEM "Quit",                        ID_GAME_QUIT
+    END
+END
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
