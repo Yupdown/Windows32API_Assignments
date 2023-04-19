@@ -141,7 +141,11 @@ int GetIntersectRect(const POINT& pos)
     for (int idx = 0; idx < 5; ++idx)
     {
         RECT r = draw_rects[idx];
-        if (r.left <= pos.x && r.top <= pos.y && r.right > pos.x && r.bottom > pos.y)
+        int xmin = min(r.left, r.right);
+        int xmax = max(r.left, r.right);
+        int ymin = min(r.top, r.bottom);
+        int ymax = max(r.top, r.bottom);
+        if (xmin <= pos.x && ymin <= pos.y && xmax > pos.x && ymax > pos.y)
             return idx;
     }
     return -1;

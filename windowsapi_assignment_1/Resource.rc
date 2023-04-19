@@ -83,6 +83,39 @@ BEGIN
     END
 END
 
+IDR_MENU2 MENU
+BEGIN
+    POPUP "Game"
+    BEGIN
+        MENUITEM "Start",                       ID_GAME_START
+        MENUITEM "Reset",                       ID_GAME_RESET
+        MENUITEM "End",                         ID_GAME_END
+    END
+    POPUP "Speed"
+    BEGIN
+        MENUITEM "Fast",                        ID_SPEED_FAST
+        MENUITEM "Medium",                      ID_SPEED_MEDIUM
+        MENUITEM "Slow",                        ID_SPEED_SLOW
+    END
+    POPUP "Color"
+    BEGIN
+        MENUITEM "Cyan",                        ID_COLOR_CYAN
+        MENUITEM "Magenta",                     ID_COLOR_MAGENTA
+        MENUITEM "Yellow",                      ID_COLOR_YELLOW
+    END
+    POPUP "Size"
+    BEGIN
+        MENUITEM "Small",                       ID_SIZE_SMALL
+        MENUITEM "Big",                         ID_SIZE_BIG
+    END
+    POPUP "Bricks"
+    BEGIN
+        MENUITEM "3",                           ID_BRICKS_3
+        MENUITEM "4",                           ID_BRICKS_4
+        MENUITEM "5",                           ID_BRICKS_5
+    END
+END
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
