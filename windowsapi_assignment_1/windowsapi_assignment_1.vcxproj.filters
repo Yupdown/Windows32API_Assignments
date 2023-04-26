@@ -96,6 +96,9 @@
     <ClCompile Include="main_4-3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main_4-3_sub.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="winapiutil.h">
