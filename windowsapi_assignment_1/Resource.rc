@@ -142,6 +142,37 @@ BEGIN
     END
 END
 
+IDR_MENU4 MENU
+BEGIN
+    POPUP "Game"
+    BEGIN
+        MENUITEM "Start",                       ID_GAME_START40038
+        MENUITEM "End",                         ID_GAME_END40039
+    END
+    POPUP "Speed"
+    BEGIN
+        MENUITEM "Accelerate",                  ID_SPEED_ACCELERATE
+        MENUITEM "Decelerate",                  ID_SPEED_DECELERATE
+    END
+    POPUP "Direction"
+    BEGIN
+        MENUITEM "Horizontal",                  ID_DIRECTION_HORIZONTAL
+        MENUITEM "Vertical",                    ID_DIRECTION_VERTICAL
+        MENUITEM "Both",                        ID_DIRECTION_BOTH
+    END
+    POPUP "Signal"
+    BEGIN
+        MENUITEM "Red",                         ID_SIGNAL_RED
+        MENUITEM "Yellow",                      ID_SIGNAL_YELLOW
+        MENUITEM "Green",                       ID_SIGNAL_GREEN
+        MENUITEM "Auto",                        ID_SIGNAL_AUTO
+    END
+    POPUP "Cross"
+    BEGIN
+        MENUITEM "Cross",                       ID_CROSS_CROSS
+    END
+END
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
