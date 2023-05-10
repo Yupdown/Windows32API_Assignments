@@ -6,6 +6,7 @@
 #define IDR_MENU2                       102
 #define IDR_MENU3                       103
 #define IDR_MENU4                       104
+#define IDR_MENU5                       105
 #define ID_BORDER_ON                    40001
 #define ID_BORDER_OFF                   40002
 #define ID_COLOR_COLOR1                 40003
@@ -56,13 +57,22 @@
 #define ID_SIGNAL_GREEN                 40048
 #define ID_SIGNAL_AUTO                  40049
 #define ID_CROSS_CROSS                  40050
+#define ID_BITMAP_TYPE1                 40051
+#define ID_BITMAP_TYPE2                 40052
+#define ID_SIZE_3X3                     40053
+#define ID_SIZE_4X4                     40054
+#define ID_SIZE_5X5                     40055
+#define ID_GAME_START40056              40056
+#define ID_GAME_PREVIEW                 40057
+#define ID_GAME_INVERT                  40058
+#define ID_GAME_QUIT40059               40059
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        105
-#define _APS_NEXT_COMMAND_VALUE         40051
+#define _APS_NEXT_RESOURCE_VALUE        106
+#define _APS_NEXT_COMMAND_VALUE         40060
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

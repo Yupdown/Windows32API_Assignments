@@ -173,6 +173,28 @@ BEGIN
     END
 END
 
+IDR_MENU5 MENU
+BEGIN
+    POPUP "Bitmap"
+    BEGIN
+        MENUITEM "Type 1",                      ID_BITMAP_TYPE1
+        MENUITEM "Type 2",                      ID_BITMAP_TYPE2
+    END
+    POPUP "Size"
+    BEGIN
+        MENUITEM "3 x 3",                       ID_SIZE_3X3
+        MENUITEM "4 x 4",                       ID_SIZE_4X4
+        MENUITEM "5 x 5",                       ID_SIZE_5X5
+    END
+    POPUP "Game"
+    BEGIN
+        MENUITEM "Start",                       ID_GAME_START40056
+        MENUITEM "Preview",                     ID_GAME_PREVIEW
+        MENUITEM "Invert",                      ID_GAME_INVERT
+        MENUITEM "Quit",                        ID_GAME_QUIT40059
+    END
+END
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
