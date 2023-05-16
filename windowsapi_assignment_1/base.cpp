@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <tchar.h>
 
+HINSTANCE g_hInst;
 WCHAR szTitle[] = L"Windows32 API Example";
 WCHAR szWindowClass[] = L"Windows32 API Class";
 
@@ -10,6 +11,8 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
+    g_hInst = hInstance;
+
     WNDCLASSEXW wClass;
     wClass.cbSize = sizeof(WNDCLASSEX);
     wClass.style = CS_HREDRAW | CS_VREDRAW;
