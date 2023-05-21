@@ -7,6 +7,56 @@
 #define IDR_MENU3                       103
 #define IDR_MENU4                       104
 #define IDR_MENU5                       105
+#define IDD_DIALOG1                     106
+#define IDD_DIALOG2                     108
+#define IDD_DIALOG3                     110
+#define IDC_RADIO3                      1003
+#define IDC_RADIO4                      1004
+#define IDC_RADIO5                      1005
+#define IDC_RADIO6                      1006
+#define IDC_RADIO7                      1007
+#define IDC_CHECK2                      1008
+#define IDC_CHECK3                      1009
+#define IDC_CHECK4                      1010
+#define IDC_CHECK5                      1011
+#define IDC_BUTTON1                     1012
+#define IDC_EDIT1                       1013
+#define IDC_BUTTON2                     1014
+#define IDC_RADIO1                      1014
+#define IDC_BUTTON3                     1015
+#define IDC_RADIO2                      1015
+#define IDC_BUTTON4                     1016
+#define IDC_LIST1                       1016
+#define IDC_BUTTON5                     1017
+#define IDC_RADIO11                     1019
+#define IDC_BUTTON29                    1020
+#define IDC_BUTTON6                     1021
+#define IDC_BUTTON30                    1022
+#define IDC_BUTTON31                    1023
+#define IDC_BUTTON7                     1024
+#define IDC_BUTTON32                    1024
+#define IDC_BUTTON8                     1025
+#define IDC_BUTTON9                     1053
+#define IDC_BUTTON10                    1054
+#define IDC_BUTTON11                    1055
+#define IDC_BUTTON12                    1056
+#define IDC_BUTTON13                    1057
+#define IDC_BUTTON14                    1058
+#define IDC_BUTTON15                    1059
+#define IDC_BUTTON16                    1060
+#define IDC_BUTTON17                    1061
+#define IDC_BUTTON18                    1062
+#define IDC_BUTTON19                    1063
+#define IDC_BUTTON20                    1064
+#define IDC_BUTTON21                    1065
+#define IDC_BUTTON22                    1066
+#define IDC_BUTTON23                    1067
+#define IDC_BUTTON24                    1068
+#define IDC_BUTTON25                    1069
+#define IDC_BUTTON26                    1070
+#define IDC_BUTTON27                    1071
+#define IDC_BUTTON28                    1072
+#define IDC_EDIT2                       1073
 #define ID_BORDER_ON                    40001
 #define ID_BORDER_OFF                   40002
 #define ID_COLOR_COLOR1                 40003
@@ -71,9 +121,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        106
+#define _APS_NEXT_RESOURCE_VALUE        112
 #define _APS_NEXT_COMMAND_VALUE         40060
-#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_CONTROL_VALUE         1017
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

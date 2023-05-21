@@ -129,6 +129,12 @@
     <ClCompile Include="main_6-1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main_6-2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main_6-3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="winapiutil.h">
