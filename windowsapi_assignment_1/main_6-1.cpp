@@ -91,7 +91,7 @@ void ParameterFunction(float t, float a, float b, float& x, float& y)
         x = t;
         y = 0.0f;
         for (int n = 0; n < 20; ++n)
-            y += pow(0.5f, n) * cos(pow(1.5f, n) * (t + a) * 3.1415f);
+            y += pow(0.5f, n) * cos(pow(5.0f, n) * (t + a) * 3.1415f);
         break;
     default:
         break;

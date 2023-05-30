@@ -10,6 +10,7 @@
 #define IDD_DIALOG1                     106
 #define IDD_DIALOG2                     108
 #define IDD_DIALOG3                     110
+#define IDD_DIALOG4                     112
 #define IDC_RADIO3                      1003
 #define IDC_RADIO4                      1004
 #define IDC_RADIO5                      1005
@@ -21,21 +22,28 @@
 #define IDC_CHECK5                      1011
 #define IDC_BUTTON1                     1012
 #define IDC_EDIT1                       1013
+#define IDC_BUTTON33                    1013
 #define IDC_BUTTON2                     1014
 #define IDC_RADIO1                      1014
 #define IDC_BUTTON3                     1015
 #define IDC_RADIO2                      1015
 #define IDC_BUTTON4                     1016
 #define IDC_LIST1                       1016
+#define IDC_RADIO8                      1016
 #define IDC_BUTTON5                     1017
+#define IDC_BUTTON34                    1017
 #define IDC_RADIO11                     1019
 #define IDC_BUTTON29                    1020
+#define IDC_RADIO9                      1020
 #define IDC_BUTTON6                     1021
+#define IDC_RADIO10                     1021
 #define IDC_BUTTON30                    1022
 #define IDC_BUTTON31                    1023
 #define IDC_BUTTON7                     1024
 #define IDC_BUTTON32                    1024
 #define IDC_BUTTON8                     1025
+#define IDC_RADIO12                     1026
+#define IDC_RADIO13                     1027
 #define IDC_BUTTON9                     1053
 #define IDC_BUTTON10                    1054
 #define IDC_BUTTON11                    1055
@@ -121,7 +129,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        112
+#define _APS_NEXT_RESOURCE_VALUE        114
 #define _APS_NEXT_COMMAND_VALUE         40060
 #define _APS_NEXT_CONTROL_VALUE         1017
 #define _APS_NEXT_SYMED_VALUE           101
